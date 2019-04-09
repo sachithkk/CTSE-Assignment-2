@@ -11,23 +11,31 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PopupActivity extends AppCompatActivity {
+public class PopupActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView ivHoursUp, ivHoursDown, ivMinutesUp, ivMinutesDown;
     private Button btnAmPm, btnSet, btnCancel;
-    private EditText etHours, etMinutes, etTitle;
-    private TextView tvTime;
+    private EditText etTitle;
+    private TextView tvTime, tvHours, tvMinutes;
     private Spinner spnRingtone;
 
     MediaPlayer mPlayer = new MediaPlayer();
-    Map<String, Integer> toneMap;
     List<String> toneList;
+    List<String> hourList;
+    List<String> minuteList;
+
+    String newHour = "01";
+    String newMinute = "00";
+    boolean isAm = true;
+    int hourIndex = 0;
+    int minuteIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +43,20 @@ public class PopupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_popup);
 
         initComponents();
+
+        ivHoursUp.setOnClickListener(this);
+        ivHoursDown.setOnClickListener(this);
+        ivMinutesUp.setOnClickListener(this);
+        ivMinutesDown.setOnClickListener(this);
+        btnSet.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
+
+        addValuesToHourMinutesLists();
+
+        updateTimeField();
+
+        // sounds doesn't play if following map & list value adding are separated to methods
+        // keep them in onCreate method
 
         // add files to ringtone map
         final Map<String, Integer> toneMap = new HashMap<>();
@@ -87,6 +109,24 @@ public class PopupActivity extends AppCompatActivity {
         });
     }
 
+    private void addValuesToHourMinutesLists() {
+        hourList = new ArrayList<>();
+        minuteList = new ArrayList<>();
+
+        for (int i = 0; i < 60; i++) {
+            if (i >= 1 && i <= 12) {
+                hourList.add((i < 10) ? "0" + i : "" + i); // add hours to hours list
+            }
+            minuteList.add((i < 10) ? "0" + i : "" + i); // add minutes to hours list
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        mPlayer.stop();
+        super.onPause();
+    }
+
     @Override
     protected void onResume() {
         mPlayer.stop();
@@ -107,10 +147,75 @@ public class PopupActivity extends AppCompatActivity {
         btnAmPm = findViewById(R.id.btnAmPm);
         btnCancel = findViewById(R.id.btnCancel);
         btnSet = findViewById(R.id.btnSet);
-        etHours = findViewById(R.id.etHours);
-        etMinutes = findViewById(R.id.etMinutes);
+        tvHours = findViewById(R.id.etHours);
+        tvMinutes = findViewById(R.id.etMinutes);
         etTitle = findViewById(R.id.etTitle);
         tvTime = findViewById(R.id.tvTime);
         spnRingtone = findViewById(R.id.spnRingtone);
+    }
+
+    public void swapAmPm(View view) {
+        if (btnAmPm.getText().toString().equalsIgnoreCase("AM")) {
+            btnAmPm.setText("PM");
+            isAm = false;
+        } else {
+            btnAmPm.setText("AM");
+            isAm = true;
+        }
+        updateTimeField();
+    }
+
+    private void updateTimeField() {
+        tvTime.setText(newHour + ":" + newMinute + " " + (isAm ? "AM" : "PM"));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ivHoursUp:
+                if(hourIndex < hourList.size()-1){
+                    tvHours.setText(hourList.get(hourIndex+1));
+                    hourIndex += 1;
+                    newHour = tvHours.getText().toString();
+                    updateTimeField();
+                }
+                break;
+
+            case R.id.ivHoursDown:
+                if(hourIndex > 0){
+                    tvHours.setText(hourList.get(hourIndex-1));
+                    hourIndex -= 1;
+                    newHour = tvHours.getText().toString();
+                    updateTimeField();
+                }
+                break;
+
+            case R.id.ivMinutesUp:
+                if(minuteIndex < minuteList.size()-1){
+                    tvMinutes.setText(minuteList.get(minuteIndex+1));
+                    minuteIndex += 1;
+                    newMinute = tvMinutes.getText().toString();
+                    updateTimeField();
+                }
+                break;
+
+            case R.id.ivMinutesDown:
+                if(minuteIndex > 0){
+                    tvMinutes.setText(minuteList.get(minuteIndex-1));
+                    minuteIndex -= 1;
+                    newMinute = tvMinutes.getText().toString();
+                    updateTimeField();
+                }
+                break;
+
+            case R.id.btnSet:
+                Toast.makeText(this, "Alarm Added", Toast.LENGTH_SHORT).show();
+                this.finish();
+                break;
+
+            case R.id.btnCancel:
+                this.finish();
+                break;
+        }
     }
 }
