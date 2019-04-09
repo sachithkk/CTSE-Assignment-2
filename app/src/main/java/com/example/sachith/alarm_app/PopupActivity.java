@@ -13,6 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sachith.alarm_app.util.RepeatListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,12 +46,9 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
 
         initComponents();
 
-        ivHoursUp.setOnClickListener(this);
-        ivHoursDown.setOnClickListener(this);
-        ivMinutesUp.setOnClickListener(this);
-        ivMinutesDown.setOnClickListener(this);
-        btnSet.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
+        setShortClickListeners();
+
+        setLongClickListeners();
 
         addValuesToHourMinutesLists();
 
@@ -107,6 +106,31 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
 
             }
         });
+    }
+
+    private void setLongClickListeners() {
+        setLongClickAction(ivHoursUp);
+        setLongClickAction(ivHoursDown);
+        setLongClickAction(ivMinutesUp);
+        setLongClickAction(ivMinutesDown);
+    }
+
+    private void setLongClickAction(final View v) {
+        v.setOnTouchListener(new RepeatListener(400, 100, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.performClick();
+            }
+        }));
+    }
+
+    private void setShortClickListeners() {
+        ivHoursUp.setOnClickListener(this);
+        ivHoursDown.setOnClickListener(this);
+        ivMinutesUp.setOnClickListener(this);
+        ivMinutesDown.setOnClickListener(this);
+        btnSet.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
     }
 
     private void addValuesToHourMinutesLists() {
@@ -173,8 +197,8 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivHoursUp:
-                if(hourIndex < hourList.size()-1){
-                    tvHours.setText(hourList.get(hourIndex+1));
+                if (hourIndex < hourList.size() - 1) {
+                    tvHours.setText(hourList.get(hourIndex + 1));
                     hourIndex += 1;
                     newHour = tvHours.getText().toString();
                     updateTimeField();
@@ -182,8 +206,8 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.ivHoursDown:
-                if(hourIndex > 0){
-                    tvHours.setText(hourList.get(hourIndex-1));
+                if (hourIndex > 0) {
+                    tvHours.setText(hourList.get(hourIndex - 1));
                     hourIndex -= 1;
                     newHour = tvHours.getText().toString();
                     updateTimeField();
@@ -191,8 +215,8 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.ivMinutesUp:
-                if(minuteIndex < minuteList.size()-1){
-                    tvMinutes.setText(minuteList.get(minuteIndex+1));
+                if (minuteIndex < minuteList.size() - 1) {
+                    tvMinutes.setText(minuteList.get(minuteIndex + 1));
                     minuteIndex += 1;
                     newMinute = tvMinutes.getText().toString();
                     updateTimeField();
@@ -200,8 +224,8 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.ivMinutesDown:
-                if(minuteIndex > 0){
-                    tvMinutes.setText(minuteList.get(minuteIndex-1));
+                if (minuteIndex > 0) {
+                    tvMinutes.setText(minuteList.get(minuteIndex - 1));
                     minuteIndex -= 1;
                     newMinute = tvMinutes.getText().toString();
                     updateTimeField();
