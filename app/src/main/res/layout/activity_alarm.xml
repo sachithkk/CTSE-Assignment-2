@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Alarm">
 
-    <TextView
-        android:id="@+id/txtTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="187dp"
-        android:text="No alarm set"
-        android:textSize="30sp" />
-
     <Button
         android:id="@+id/createAlarm"
         android:layout_width="wrap_content"
@@ -25,5 +15,22 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="55dp"
         android:text="Button" />
+
+    <ListView
+        android:id="@+id/list1"
+        android:layout_width="match_parent"
+        android:layout_height="243dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+    <Button
+        android:id="@+id/offBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="155dp"
+        android:text="OFF"
+        />
 
 </RelativeLayout>

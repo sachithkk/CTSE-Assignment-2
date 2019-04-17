@@ -1,5 +1,7 @@
 package com.example.sachith.alarm_app;
 
+import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +29,8 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
     private EditText etTitle;
     private TextView tvTime, tvHours, tvMinutes;
     private Spinner spnRingtone;
+    DatabaseHelper databaseHelper;
+    //Alarm alarm;
 
     MediaPlayer mPlayer = new MediaPlayer();
     List<String> toneList;
@@ -69,7 +73,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
 
         //set values to ring List
         toneList = new ArrayList<>();
-        toneList.add("-Select Alarm Tone-");
+        toneList.add("-None-");
         toneList.add("Bright Morning");
         toneList.add("Early Twilight");
         toneList.add("Gentle Breeze");
@@ -106,6 +110,9 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
 
             }
         });
+
+        databaseHelper = new DatabaseHelper(this);
+        //alarm = new Alarm();
     }
 
     private void setLongClickListeners() {
@@ -190,7 +197,7 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void updateTimeField() {
-        tvTime.setText(newHour + ":" + newMinute + " " + (isAm ? "AM" : "PM"));
+        tvTime.setText(newHour + ":" + newMinute + ":" + (isAm ? "AM" : "PM"));
     }
 
     @Override
@@ -233,8 +240,24 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btnSet:
-                Toast.makeText(this, "Alarm Added", Toast.LENGTH_SHORT).show();
-                this.finish();
+                //databaseHelper = new DatabaseHelper(this);
+                //Alarm alarm = new Alarm();
+                //Toast.makeText(this, tvHours.getText(), Toast.LENGTH_SHORT).show();
+                boolean result = databaseHelper.addAlarm(tvTime.getText().toString() , etTitle.getText().toString() );
+                if(result){
+                    Intent intent = new Intent(PopupActivity.this, Alarm.class);
+                    startActivity(intent);
+                    this.finish();
+                    //Toast.makeText(this, "Save Data", Toast.LENGTH_SHORT).show();
+                    //alarm.viewData();
+                }
+                else{
+                    Toast.makeText(this, "Not Save", Toast.LENGTH_SHORT).show();
+                }
+
+                //Intent intent = new Intent(PopupActivity.this, AlarmOff.class);
+                //startActivity(intent);
+                //this.finish();
                 break;
 
             case R.id.btnCancel:
@@ -242,4 +265,6 @@ public class PopupActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
+
+
 }

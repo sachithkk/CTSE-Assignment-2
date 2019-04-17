@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Alarm-App</string>
     <string name="button">Button</string>
+    <string name="alarm_off">SELECT RIGHT ANSWER TO OFF ALARM</string>
 
     <string-array name="hours">
         <item>00</item>

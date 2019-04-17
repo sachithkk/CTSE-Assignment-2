@@ -11,9 +11,9 @@ import android.widget.Toast;
 public class AlertReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        //Toast.makeText(context,"Alarm",Toast.LENGTH_SHORT).show();
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Ringtone r = RingtoneManager.getRingtone(context, notification);
-        r.play();
+        Toast.makeText(context,"Alarm Ringing",Toast.LENGTH_SHORT).show();
+//        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//        Ringtone r = RingtoneManager.getRingtone(context, notification);
+//        r.play();
     }
 }
