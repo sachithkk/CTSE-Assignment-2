@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+
 public class DatabaseHelper extends SQLiteOpenHelper{
 
     private static final String databaseName = "mydb";
@@ -35,15 +37,17 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         onCreate(db);
     }
 
-    public boolean addAlarm(String alarmTime ,String name){
+    public boolean addAlarm(String alarmTime ,String name , int toneId){
 
         String am_pm = alarmTime.substring(6,alarmTime.length());
         String newTime = alarmTime.substring(0,5)+":00";
+        String id = String.valueOf(toneId);
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(col1 , newTime);
         contentValues.put(col2 , name);
+        contentValues.put(col3,id);
         contentValues.put(col4 , am_pm);
 
         long result = db.insert(tableName , null , contentValues);
@@ -51,6 +55,20 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             return true;
         }
         return false;
+    }
+
+    public String findAmPm(){
+
+        long date = System.currentTimeMillis();
+        SimpleDateFormat time1 = new SimpleDateFormat("kk");
+        String timeString1 = time1.format(date);
+        int timeFormat = Integer.parseInt(timeString1);
+        System.out.println(timeString1);
+
+        if(timeFormat < 12){
+            return "AM";
+        }
+        return "PM";
     }
 
 
@@ -61,10 +79,27 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return cursor;
     }
 
-    public Cursor getNearTime(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM alarmtable ORDER BY time(time) DESC LIMIT 1" , null);
+    public Cursor getNearTime() {
+        String am_pm = findAmPm();
+        if (am_pm.equalsIgnoreCase("AM")) {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String[] selectionArgs = {"AM" + "%"};
+            Cursor cursor = db.rawQuery("SELECT * FROM alarmtable WHERE am_pm LIKE ? ORDER BY time(time) DESC LIMIT 1", selectionArgs);
 //        SELECT *  FROM alarmtable ORDER  BY time(time) DESC LIMIT 1
-        return cursor;
+            return cursor;
+        } else {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String[] selectionArgs = {"PM" + "%"};
+            Cursor cursor = db.rawQuery("SELECT * FROM alarmtable WHERE am_pm LIKE ? ORDER BY time(time) DESC LIMIT 1", selectionArgs);
+//        SELECT *  FROM alarmtable ORDER  BY time(time) DESC LIMIT 1
+            return cursor;
+
+        }
+    }
+
+    public Integer deleteAlarmrow(String Id){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(tableName , "id = ?",new String[] {Id});
     }
 }

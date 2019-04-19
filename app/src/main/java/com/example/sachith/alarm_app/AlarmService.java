@@ -82,12 +82,18 @@ public class AlarmService extends Service{
                     if(result.getCount() != 0){
                         while (result.moveToNext()){
                             String dbTime = result.getString(1)+" "+result.getString(4);
-                            if(currentTime.equalsIgnoreCase(dbTime)){
-                                Play play = new Play();
-                                play.startAlarm(getApplicationContext());
-                                Intent intent = new Intent(getApplicationContext() , AlarmOff.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                            if(currentTime.equalsIgnoreCase(dbTime) && isStatus){
+                                Integer delete = databaseHelper.deleteAlarmrow(result.getString(0));
+                                if(delete != null){
+                                    Play play = new Play();
+                                    play.startAlarm(getApplicationContext() , result.getString(3));
+                                    Intent intent = new Intent(getApplicationContext() , AlarmOff.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
+                            }
+                            else{
+                                isStatus = true;
                             }
                         }
                     }

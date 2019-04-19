@@ -21,7 +21,6 @@
         </activity>
         <service android:name=".AlarmService"/>
         <activity android:name=".AlarmOff" />
-        <receiver android:name=".AlertReceiver"/>
     </application>
 
 </manifest>

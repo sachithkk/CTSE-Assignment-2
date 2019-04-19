@@ -27,12 +27,11 @@ import java.util.Date;
 
 public class Alarm extends AppCompatActivity{
 
-    private Button setAlarm , alarmOffButton;
+    private Button setAlarm;
     private TextView status;
     DatabaseHelper databaseHelper;
     ListView listView;
     TimePicker view;
-    //boolean isAlarmRing = false;
     boolean isData = false;
     MediaPlayer mediaPlayer;
     Play play = new Play();
@@ -55,7 +54,7 @@ public class Alarm extends AppCompatActivity{
 
         setAlarm = findViewById(R.id.createAlarm);
         listView = findViewById(R.id.list1);
-        alarmOffButton = findViewById(R.id.offBtn);
+//        alarmOffButton = findViewById(R.id.offBtn);
 
         setAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,19 +77,19 @@ public class Alarm extends AppCompatActivity{
             startService(alarmServiceIntent);
         }
 
-        if(isAlarmRing){
-            alarmOffButton.setVisibility(View.VISIBLE);
-            alarmOffButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext() , AlarmOff.class);
-                    startActivity(intent);
-                }
-            });
-        }
-        else{
-            alarmOffButton.setVisibility(View.INVISIBLE);
-        }
+//        if(isAlarmRing){
+//            alarmOffButton.setVisibility(View.VISIBLE);
+//            alarmOffButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(getApplicationContext() , AlarmOff.class);
+//                    startActivity(intent);
+//                }
+//            });
+//        }
+//        else{
+//            alarmOffButton.setVisibility(View.INVISIBLE);
+//        }
     }
 
     public void viewData() {
@@ -139,9 +138,9 @@ public class Alarm extends AppCompatActivity{
         int timeFormat = Integer.parseInt(timeString1);
         System.out.println(timeString1);
 
-        if(timeFormat > 12){
-            return "PM";
+        if(timeFormat < 12){
+            return "AM";
         }
-        return "AM";
+        return "PM";
     }
 }
